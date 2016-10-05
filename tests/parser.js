@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import parseExpression from '../lib/parser';
+import parseExpression from '../src/parser';
 
 describe('parseExpression', () => {
   it('parses input into a DynamoDB Expression with AttributeNames and AttributeValues', () => {

@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import { noParse, operators } from '../lib/parser/operators';
+import { noParse, operators } from '../src/parser/operators';
 
 describe('noParse', () => {
   it('should include "$size" & "$exist"', () => {

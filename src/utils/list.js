@@ -10,14 +10,8 @@ export default class List {
     return `${this.prefix}${this.items.indexOf(item) + 1}`;
   }
 
-  /*
-  *values() {
-    yield* this.items;
-  }
-  */
-
   get map() {
-    return this.items.reduce((output, item, index) => ({ ...output, [`${this.prefix}${index + 1}`]: item }), {});
+    return this.items.reduce((output, item, index) => Object.assign(output, { [`${this.prefix}${index + 1}`]: item }), {});
   }
 
 }
