@@ -2,13 +2,19 @@
   "name": "ddb-thing",
   "version": "0.0.1",
   "description": "",
+  "author": "",
+  "keywords": [],
   "main": "src/index.js",
+  "license": "MIT",
+  "files": ["src"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/idiose/ddb-thing"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "mocha --compilers js:babel-core/register tests/index.js"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.17.0",
     "babel-polyfill": "^6.16.0",
@@ -18,21 +24,5 @@
     "eslint-config-airbnb-base": "^8.0.0",
     "eslint-plugin-import": "^2.0.0",
     "mocha": "^3.1.0"
-  },
-  "babel": {
-    "presets": [
-      "latest"
-    ]
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "rules": {
-      "import/no-extraneous-dependencies": [
-        2,
-        {
-          "devDependencies": true
-        }
-      ]
-    }
   }
 }
