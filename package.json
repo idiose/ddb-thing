@@ -1,12 +1,14 @@
 {
   "name": "ddb-thing",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "author": "",
   "keywords": [],
   "main": "src/index.js",
   "license": "MIT",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/idiose/ddb-thing"
