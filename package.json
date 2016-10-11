@@ -4,10 +4,11 @@
   "description": "",
   "author": "",
   "keywords": [],
-  "main": "src/index.js",
+  "main": "./index.js",
   "license": "MIT",
   "files": [
-    "src"
+    "index.js",
+    "lib"
   ],
   "repository": {
     "type": "git",

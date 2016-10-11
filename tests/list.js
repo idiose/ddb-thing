@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import List from '../src/utils/list';
+import List from '../lib/attribute-list';
 
 describe('List', () => {
   describe('.prototype.constructor', () => {
