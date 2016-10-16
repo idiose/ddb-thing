@@ -6,6 +6,12 @@
       {
         "devDependencies": true
       }
-    ]
+    ],
+    "max-len": ["error", 120, 2, {
+      ignoreUrls: true,
+      ignoreComments: false,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: true,
+    }]
   }
 }

@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 
-import './list';
-import './operators';
-import './parser';
+// import './list';
+// import './operators';
+// import './parser';
+import './wrapper';
