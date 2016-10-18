@@ -1,8 +1,46 @@
 // import { describe, it } from 'mocha';
 // import { expect } from 'chai';
 
-// import wrap from '../lib/wrapper';
 // import thing from '../lib/thing';
+
+// TO-DO:
+//  required and default options
+//  unrecognized keys
+//  just insert isType into validators array? look for isArray(validators) in validate
+
+/*
+const schema = {
+  attributes: {
+    name: {
+      first: { type: 'S', uppercase: true },
+      last: { type: 'S', trim: true },
+    },
+    email: { type: 'S', lowercase: true, trim: true },
+    active: { type: 'BOOL', default: false, required: true },
+    address: {
+      permanent: { type: 'S', required: true },
+      mailing: { type: 'S' },
+    },
+  },
+  timestamps: true,
+};
+
+const users = thing('users', schema);
+
+async function test() {
+  try {
+    const user = await users.create({
+      name: { first: 'jack', last: '  SMITH  ' },
+      email: '  EMAIL ADDRESS LOL  ',
+      address: { permanent: 'haha' },
+    });
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+test();
+*/
 
 // const test = thing('test');
 // const other = thing('test');
