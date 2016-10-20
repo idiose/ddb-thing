@@ -17,13 +17,23 @@ describe('config', () => {
   });
 
   describe('.errors.*', () => {
-    it('can be reassigned to a new string value', () => {
-      const newTypeError = 'new error';
-      errors.type = newTypeError;
-      expect(errors.type).to.equal(newTypeError);
+    it('can be reassigned to a new string or function value', () => {
+      const newTypeErrorString = 'new error';
+      errors.type = newTypeErrorString;
+      expect(errors.type).to.equal(newTypeErrorString);
+      const newTypeErrorFunction = () => 'error message from function';
+      errors.type = newTypeErrorFunction;
+      expect(errors.type).to.equal(newTypeErrorFunction);
     });
-    it('refuses non-string reassignment', () => {
-      expect(() => (errors.type = true)).to.throw('errors are required to be strings');
+    it('refuses non-string|non-function reassignment', () => {
+      const expectedError = 'errors must either be a string or a function that returns a string';
+      expect(() => (errors.type = true)).to.throw(expectedError);
+      expect(() => (errors.type = 50)).to.throw(expectedError);
+    });
+    it('refuses functions that do not return a string value', () => {
+      const expectedError = 'error functions must return a string';
+      expect(() => (errors.type = () => true)).to.throw(expectedError);
+      expect(() => (errors.type = () => 50)).to.throw(expectedError);
     });
   });
 });

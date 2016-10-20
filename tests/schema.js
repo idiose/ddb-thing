@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
+import { typeNames } from '../lib/utils';
 import schema from '../lib/schema';
 
 describe('schema', () => {
@@ -9,7 +10,7 @@ describe('schema', () => {
     expect(() => schema()).to.throw(invalidSchema);
     expect(() => schema(true)).to.throw(invalidSchema);
     expect(() => schema({})).to.throw(invalidSchema);
-    expect(() => schema({ timestamps: true })).to.throw('attribute definition required');
+    expect(() => schema({ timestamps: true })).to.throw('invalid attributes description');
   });
   it('throws an error when attribute description(s) are invalid or incomplete', () => {
     const invalidAttributes = 'invalid attributes description';
@@ -29,26 +30,26 @@ describe('schema', () => {
   });
   it('throws an error when provded an unrecognized option for a given type', () => {
     const unrecognizedOption = (option, type, path) => `unrecognized attribute option '${option}' for type '${type}' (at '${path}')`;
-    expect(() => schema({ attributes: { name: { type: 'S', min: 5 } } })).to.throw(unrecognizedOption('min', 'S', 'name'));
-    expect(() => schema({ attributes: { name: { type: 'L', match: /hi/ } } })).to.throw(unrecognizedOption('match', 'L', 'name'));
+    expect(() => schema({ attributes: { name: { type: typeNames.String, min: 5 } } })).to.throw(unrecognizedOption('min', typeNames.String, 'name'));
+    expect(() => schema({ attributes: { name: { type: typeNames.List, match: /hi/ } } })).to.throw(unrecognizedOption('match', typeNames.List, 'name'));
   });
   it('throws an error when \'required\' option is not a boolean', () => {
     const notBool = 'option \'required\' expects a boolean (at \'name\')';
-    expect(() => schema({ attributes: { name: { type: 'S', required: 'yes' } } })).to.throw(notBool);
-    expect(() => schema({ attributes: { name: { type: 'S', required: [] } } })).to.throw(notBool);
+    expect(() => schema({ attributes: { name: { type: typeNames.String, required: 'yes' } } })).to.throw(notBool);
+    expect(() => schema({ attributes: { name: { type: typeNames.String, required: [] } } })).to.throw(notBool);
   });
   it('throws an error when \'default\' option is given a value that doesn\'t match described type', () => {
     const wrongType = type => `option 'default' expects a value with type '${type}' (at \'name\')`;
-    expect(() => schema({ attributes: { name: { type: 'S', default: 5 } } })).to.throw(wrongType('S'));
-    expect(() => schema({ attributes: { name: { type: 'BOOL', default: 'true' } } })).to.throw(wrongType('BOOL'));
+    expect(() => schema({ attributes: { name: { type: typeNames.String, default: 5 } } })).to.throw(wrongType(typeNames.String));
+    expect(() => schema({ attributes: { name: { type: typeNames.Boolean, default: 'true' } } })).to.throw(wrongType(typeNames.Boolean));
   });
 
   const validDefinition = {
     attributes: {
       name: {
-        first: { type: 'S', default: 'Rick', required: true, minlength: 3 },
+        first: { type: typeNames.String, default: 'Rick', required: true, minlength: 3 },
         last: {
-          type: 'S',
+          type: typeNames.String,
           default: 'Sanchez',
           validate: (value) => {
             if (value === 'pizza') throw new Error('pizza isn\'t a name!');
@@ -56,14 +57,14 @@ describe('schema', () => {
         },
       },
       settings: {
-        password: { type: 'S', get: val => (val && val.replace(/[A-Za-z0-9]/g, '*')) || '' },
+        password: { type: typeNames.String, get: val => (val && val.replace(/[A-Za-z0-9]/g, '*')) || '' },
       },
       address: {
-        permanent: { type: 'S', default: 'space', required: true },
-        mailing: { type: 'S', trim: true },
+        permanent: { type: typeNames.String, default: 'space', required: true },
+        mailing: { type: typeNames.String, trim: true },
       },
       age: {
-        type: 'N',
+        type: typeNames.Number,
         default: 50,
         validate: [
           (value) => {
@@ -79,13 +80,13 @@ describe('schema', () => {
         get: val => `${val}`,
       },
       gender: {
-        type: 'S',
+        type: typeNames.String,
         enum: ['male', 'female'],
         uppercase: true,
         required: true,
         get: [val => ((val && val[0]) || ''), val => ((val && val.toLowerCase()) || '')],
       },
-      occupation: { type: 'S', default: 'scientist' },
+      occupation: { type: typeNames.String, default: 'scientist' },
     },
   };
 
