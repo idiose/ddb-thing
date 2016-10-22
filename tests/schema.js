@@ -40,8 +40,10 @@ describe('schema', () => {
   });
   it('throws an error when \'default\' option is given a value that doesn\'t match described type', () => {
     const wrongType = type => `option 'default' expects a value with type '${type}' (at \'name\')`;
-    expect(() => schema({ attributes: { name: { type: typeNames.String, default: 5 } } })).to.throw(wrongType(typeNames.String));
-    expect(() => schema({ attributes: { name: { type: typeNames.Boolean, default: 'true' } } })).to.throw(wrongType(typeNames.Boolean));
+    expect(() => schema({ attributes: { name: { type: typeNames.String, default: 5 } } }))
+      .to.throw(wrongType(typeNames.String));
+    expect(() => schema({ attributes: { name: { type: typeNames.Boolean, default: 'true' } } }))
+      .to.throw(wrongType(typeNames.Boolean));
   });
 
   const validDefinition = {
