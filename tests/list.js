@@ -37,6 +37,18 @@ describe('List', () => {
     });
   });
 
+  describe('.prototype.length', () => {
+    it('returns the count of current key-value pairs', () => {
+      const list = new List();
+      list.add(1);
+      expect(list.length).to.equal(1);
+      list.add(2);
+      expect(list.length).to.equal(2);
+      list.add(1);
+      expect(list.length).to.equal(2);
+    });
+  });
+
   describe('.prototype.map', () => {
     it('returns an object of key-value pairs', () => {
       const list = new List();

@@ -15,6 +15,7 @@ const requiresArray = operator => it('throws an error if value is not an array',
   })).to.throw(`$${operator} requires argument type Array`);
 });
 
+
 describe('operators', () => {
   const comparators = { eq: '=', ne: '<>', gt: '>', gte: '>=', lt: '<', lte: '<=' };
   for (const [operator, comparator] of Object.entries(comparators)) {
@@ -81,7 +82,6 @@ describe('operators', () => {
       })).to.deep.equal({
         Expression: 'attribute_exists(#1)',
         ExpressionAttributeNames: { '#1': 'path' },
-        ExpressionAttributeValues: {},
       });
     });
     it('returns a not_exists function when value argument is false', () => {
@@ -90,7 +90,6 @@ describe('operators', () => {
       })).to.deep.equal({
         Expression: 'attribute_not_exists(#1)',
         ExpressionAttributeNames: { '#1': 'path' },
-        ExpressionAttributeValues: {},
       });
     });
     it('throws an error if value is not a boolean', () => {
@@ -105,8 +104,6 @@ describe('operators', () => {
     type: 'attribute_type',
     beginsWith: 'begins_with',
     contains: 'contains',
-    append: 'list_append',
-    ine: 'if_not_exists',
   };
   for (const [operator, method] of Object.entries(functionals)) {
     describe(`.${operator}`, () => {
@@ -123,19 +120,6 @@ describe('operators', () => {
     });
   }
 
-  describe('.prepend', () => {
-    it('places value and path into "append" method', () => {
-      expect(parseExpression({
-        Expression: { path: { $prepend: 'value' } },
-      })).to.deep.equal({
-        Expression: 'list_append(:1, #1)',
-        ExpressionAttributeNames: { '#1': 'path' },
-        ExpressionAttributeValues: { ':1': 'value' },
-      });
-    });
-    requiresPath('prepend');
-  });
-
   describe('.size', () => {
     it('returns size method', () => {
       expect(parseExpression({
@@ -150,7 +134,6 @@ describe('operators', () => {
       })).to.deep.equal({
         Expression: '#1 = size(#2)',
         ExpressionAttributeNames: { '#1': 'path', '#2': 'otherPath' },
-        ExpressionAttributeValues: {},
       });
     });
     it('throws an error when passed an invalid size operator', () => {
@@ -171,7 +154,6 @@ describe('operators', () => {
           Expression: { [`$${operator}`]: ['one', 'two'] },
         })).to.deep.equal({
           Expression: `:1 ${joinder} :2`,
-          ExpressionAttributeNames: {},
           ExpressionAttributeValues: { ':1': 'one', ':2': 'two' },
         });
       });
@@ -218,7 +200,7 @@ describe('operators', () => {
       expect(parseExpression({
         Expression: { path: { $inc: 5 } },
       })).to.deep.equal({
-        Expression: '#1 + :1',
+        Expression: '#1 = #1 + :1',
         ExpressionAttributeNames: { '#1': 'path' },
         ExpressionAttributeValues: { ':1': 5 },
       });
@@ -227,7 +209,7 @@ describe('operators', () => {
       expect(parseExpression({
         Expression: { path: { $inc: -5 } },
       })).to.deep.equal({
-        Expression: '#1 - :1',
+        Expression: '#1 = #1 - :1',
         ExpressionAttributeNames: { '#1': 'path' },
         ExpressionAttributeValues: { ':1': 5 },
       });
@@ -241,6 +223,45 @@ describe('operators', () => {
       })).to.throw('$inc requires argument type Number');
     });
     requiresPath('inc');
+  });
+
+  describe('.ine', () => {
+    it('places path and value into "if_not_exists" method', () => {
+      expect(parseExpression({
+        Expression: { path: { $ine: 'value' } },
+      })).to.deep.equal({
+        Expression: '#1 = if_not_exists(#1, :1)',
+        ExpressionAttributeNames: { '#1': 'path' },
+        ExpressionAttributeValues: { ':1': 'value' },
+      });
+    });
+    requiresPath('ine');
+  });
+
+  describe('.append', () => {
+    it('places path and value into "append" method', () => {
+      expect(parseExpression({
+        Expression: { path: { $append: 'value' } },
+      })).to.deep.equal({
+        Expression: '#1 = list_append(#1, :1)',
+        ExpressionAttributeNames: { '#1': 'path' },
+        ExpressionAttributeValues: { ':1': 'value' },
+      });
+    });
+    requiresPath('append');
+  });
+
+  describe('.prepend', () => {
+    it('places value and path into "append" method', () => {
+      expect(parseExpression({
+        Expression: { path: { $prepend: 'value' } },
+      })).to.deep.equal({
+        Expression: '#1 = list_append(:1, #1)',
+        ExpressionAttributeNames: { '#1': 'path' },
+        ExpressionAttributeValues: { ':1': 'value' },
+      });
+    });
+    requiresPath('prepend');
   });
 
   describe('.set', () => {
@@ -262,6 +283,7 @@ describe('operators', () => {
         ExpressionAttributeValues: { ':1': 'value', ':2': 'otherValue' },
       });
     });
+
     it('continues parsing if value is a non $eq object', () => {
       expect(parseExpression({
         Expression: { $set: { path: { $ine: 'value' } } },
@@ -271,6 +293,7 @@ describe('operators', () => {
         ExpressionAttributeValues: { ':1': 'value' },
       });
     });
+
     it('expects an object arg', () => {
       expect(() => parseExpression({
         Expression: { $set: 'uh oh' },
@@ -285,7 +308,6 @@ describe('operators', () => {
       })).to.deep.equal({
         Expression: 'REMOVE #1',
         ExpressionAttributeNames: { '#1': 'path' },
-        ExpressionAttributeValues: {},
       });
     });
     it('joins multiple paths with commas', () => {
@@ -294,7 +316,6 @@ describe('operators', () => {
       })).to.deep.equal({
         Expression: 'REMOVE #1, #2',
         ExpressionAttributeNames: { '#1': 'path', '#2': 'otherPath' },
-        ExpressionAttributeValues: {},
       });
     });
     it('throws an error if arg is not string or array of strings', () => {
@@ -388,7 +409,6 @@ describe('parser', () => {
     })).to.deep.equal({
       ProjectionExpression: '#1, #2, #3.#4',
       ExpressionAttributeNames: { '#1': 'pathOne', '#2': 'pathTwo', '#3': 'nested', '#4': 'path' },
-      ExpressionAttributeValues: {},
     });
   });
 
@@ -406,7 +426,6 @@ describe('parser', () => {
     })).to.deep.equal({
       Expression: '#1.#2.#3 < size(#4)',
       ExpressionAttributeNames: { '#1': 'user', '#2': 'accomplishments', '#3': 'count', '#4': 'ego' },
-      ExpressionAttributeValues: {},
     });
 
     expect(parseExpression({
@@ -518,6 +537,14 @@ describe('parser', () => {
         '#4': 'primary',
       },
       ExpressionAttributeValues: { ':1': 'jack', ':2': 50 },
+    });
+
+    expect(parseExpression({
+      KeyConditionExpression: { department: 'IT', email: { $ne: 'admin@test.com' } },
+    })).to.deep.equal({
+      KeyConditionExpression: '#1 = :1 AND #2 <> :2',
+      ExpressionAttributeNames: { '#1': 'department', '#2': 'email' },
+      ExpressionAttributeValues: { ':1': 'IT', ':2': 'admin@test.com' },
     });
   });
 });

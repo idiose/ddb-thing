@@ -2,13 +2,12 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
 import types from '../lib/types';
-import { typeNames } from '../lib/utils';
 
 describe('types', () => {
   describe('.*all', () => {
     describe('.validators', () => {
       describe('.validate', () => {
-        const validate = types[typeNames.String].validators.validate;
+        const validate = types.String.validators.validate;
         it('throws an error if any input is not a function', () => {
           const expected = 'option \'validate\' expects a function or list of functions (at \'path\')';
           expect(() => validate('path', 'type', [() => {}, 2, () => {}])).to.throw(expected);
@@ -23,7 +22,7 @@ describe('types', () => {
 
     describe('.setters', () => {
       describe('.set', () => {
-        const set = types[typeNames.String].setters.set;
+        const set = types.String.setters.set;
         it('throws an error if any input is not a function', () => {
           const expected = 'option \'set\' expects a function or list of functions (at \'path\')';
           expect(() => set('path', 'type', [2, () => {}])).to.throw(expected);
@@ -42,7 +41,7 @@ describe('types', () => {
 
     describe('.getters', () => {
       describe('.get', () => {
-        const get = types[typeNames.String].getters.get;
+        const get = types.String.getters.get;
         it('throws an error if any input is not a function', () => {
           const expected = 'option \'get\' expects a function or list of functions (at \'path\')';
           expect(() => get('path', 'type', [() => {}, 2, () => {}])).to.throw(expected);
@@ -59,7 +58,7 @@ describe('types', () => {
   describe('.String & .Number', () => {
     describe('.validators', () => {
       describe('.enum', () => {
-        const string = types[typeNames.String];
+        const string = types.String;
         const expected = 'option \'enum\' expects an array of enumerable values of type \'String\' (at \'path\')';
         it('throws an error when input is not an array', () => {
           expect(() => string.validators.enum('path', 'String', 'string')).to.throw(expected);
@@ -86,7 +85,7 @@ describe('types', () => {
   });
 
   describe('.String', () => {
-    const string = types[typeNames.String];
+    const string = types.String;
     describe('.options', () => {
       it('includes all string options', () => {
         expect(string.options).to.eql(
@@ -169,7 +168,7 @@ describe('types', () => {
   });
 
   describe('.Number', () => {
-    const number = types[typeNames.Number];
+    const number = types.Number;
     describe('.options', () => {
       it('includes all number options', () => {
         expect(number.options).to.eql(
