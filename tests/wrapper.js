@@ -42,13 +42,21 @@ const testUser = {
 };
 
 describe('wrapper', () => {
-  before(async () => {
+  before(async function lol() {
+    this.timeout(0);
+
     await DDB.createTable({
       TableName,
       KeySchema: [{ AttributeName: 'hash', KeyType: 'HASH' }, { AttributeName: 'range', KeyType: 'RANGE' }],
       AttributeDefinitions: [{ AttributeName: 'hash', AttributeType: 'S' }, { AttributeName: 'range', AttributeType: 'S' }],
       ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
     }).promise();
+
+    let active = false;
+    while (!active) {
+      const { Table: { TableStatus } } = await DDB.describeTable({ TableName }).promise();
+      if (TableStatus === 'ACTIVE') active = true;
+    }
 
     await Promise.all(seeds.map(User.put));
   });
@@ -182,7 +190,7 @@ describe('wrapper', () => {
     });
 
     it('passes startKey to ddb', async () => {
-      const results = await User.scan({ startKey: { hash: 'CCC', range: 'ccc' } });
+      const results = await User.scan({ startKey: { hash: 'BBB', range: 'ccc' } });
       expect(results.Count).to.equal(6);
       expect(results.Items.length).to.equal(6);
       expect(results.Items[0].hash).to.equal('AAA');
@@ -195,7 +203,7 @@ describe('wrapper', () => {
       expect(results.Items.length).to.equal(1);
       expect(results.Count).to.equal(1);
       expect(results.Items[0].range).to.equal('aaa');
-      expect(results.LastEvaluatedKey).to.deep.equal({ hash: 'CCC', range: 'aaa' });
+      expect(results.LastEvaluatedKey).to.deep.equal({ hash: 'BBB', range: 'aaa' });
     });
 
     it('passes select to ddb when no projection present', async () => {

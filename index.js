@@ -1,8 +1,3 @@
-/*
-import parseExpression from './lib/parser';
+import thing from './lib/thing';
 
-export { parseExpression };
-export default { parseExpression };
-*/
-
-export default { haha: 'lol' };
+export default thing;

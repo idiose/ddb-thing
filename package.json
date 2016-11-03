@@ -2,12 +2,20 @@
   "name": "ddb-thing",
   "version": "0.0.2",
   "description": "",
-  "author": "",
-  "keywords": [],
+  "author": "Ian Moore <idmwsls@gmail.com>",
+  "contributors": [],
+  "keywords": [
+    "dynamodb",
+    "expression",
+    "schema",
+    "odm",
+    "orm"
+  ],
   "main": "./index.js",
   "license": "MIT",
   "files": [
     "index.js",
+    "parser.js",
     "lib/"
   ],
   "repository": {
