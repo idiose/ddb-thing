@@ -11,7 +11,7 @@ $ npm install ddb-thing
 #### Things
 
 ```js
-import thing form 'ddb-thing';
+import thing from 'ddb-thing';
 
 thing.AWS.config.loadFromPath('./config.json');
 thing.options.tableRoot = 'my-project-'; // if your tables are namespaced you can set a global root
@@ -26,13 +26,14 @@ const userSchema = {
   timestamps: true,
 };
 
-const User = thing('users', userSchema); // will expect a table names 'my-project-users'
+const User = thing('users', userSchema); // will expect a table named 'my-project-users'
 
 export const users = {
   create: async (input) => {
     // ...
+    // create a ConditionExpression to prevent overwriting
     const conditions = { email: { $exists: false } };
-    const user = await User.put(input, { conditions }); // creates a ConditionExpression to prevent overwriting
+    const user = await User.put(input, { conditions });
     // ...
     return user;
   },
