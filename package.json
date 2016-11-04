@@ -1,12 +1,13 @@
 {
   "name": "ddb-thing",
   "version": "0.0.2",
-  "description": "",
+  "description": "DynamoDB ODM",
   "author": "Ian Moore <idmwsls@gmail.com>",
   "contributors": [],
   "keywords": [
     "dynamodb",
     "expression",
+    "validation",
     "schema",
     "odm",
     "orm"
