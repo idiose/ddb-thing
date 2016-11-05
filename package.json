@@ -1,6 +1,6 @@
 {
   "name": "ddb-thing",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "DynamoDB ODM",
   "author": "Ian Moore <idmwsls@gmail.com>",
   "contributors": [],
