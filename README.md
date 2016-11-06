@@ -31,6 +31,7 @@ const schema = {
 };
 
 const users = thing('users', schema); // will use table 'my-project-users'
+const messages = thing('messages', messageSchema, { useRoot: false }); // will use table 'messages'
 
 const conditions = { email: { $exists: false } };
 const newUser = await users.put({ username: 'username', email: 'email' }, { conditions });
@@ -38,7 +39,7 @@ const newUser = await users.put({ username: 'username', email: 'email' }, { cond
 
 ### Options
 
-The following can be reassigned (`thing.options[*option*] = *value*`)
+The following can be reassigned (`thing.options[ _option_ ] = _value_ `)
 
 Option | Type | Default | Description
 --- | --- | --- | ---
@@ -60,13 +61,13 @@ Option | Type | Default | Description
 
 **responseHandler** is meant to divorce monitoring logic from item interaction. When `response` is `false` (the default), DDB Thing will return only the data relevant to the action used (`Item`s, `Count`, etc.) and call this method with the single argument `{ action, params, data }`.
 
-**action**: the action called (`put`, `get`, etc.)
-**params**: the complete params as passed to AWS (with the exception of `Segment` which can be inferred from param order)
-**data**: the complete DynamoDB response
+* **action**: the action called (`put`, `get`, etc.)
+* **params**: the complete params as passed to AWS (with the exception of `Segment` which can be inferred from param order)
+* **data**: the complete DynamoDB response
 
 #### Errors
 
-Each built-in validation error can be reassigned (`thing.errors[*error*] = *value*`) to either a `String` or a `Function`.
+Each built-in validation error can be reassigned (`thing.errors[ _error_ ] = _value_ `) to either a `String` or a `Function`.
 Functions can, in general, expect arguments:
 
 * **path**: the attribute path (i.e. `'name.first'`, `'age'`)
@@ -93,10 +94,10 @@ const customTypeErrorFunction = (path, type) => `expected a ${type} at ${path}!`
 const description = {
   attributes: {
     region: String,
-    email: [String, 'custom type error string'],
+    email: [String, customTypeErrorString],
     name: {
       first: { type: String, ...attributeOptions },
-      last: { type: [String, customTypeErrorFunction], ...attributeOptiosn },
+      last: { type: [String, customTypeErrorFunction], ...attributeOptions },
     },
   },
   ...descriptionOptions,
@@ -223,10 +224,10 @@ const [segmentOne, segmentTwo] = await users.scan({ project: ['name', 'address']
 const { Item: { name, address } } = segmentOne;
 ```
 
-### .query(*KeyConidtion*[, { *filter*, *project*, *index*, *startKey*, *limit*, *select*, *reverse* }])
+### .query(*KeyCondition*[, { *filter*, *project*, *index*, *startKey*, *limit*, *select*, *reverse* }])
 Queries a table at the specified partition. Delegates to [DynamoDB.query](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html)
 
-* **KeyConidtion**: parses a [KeyConditionExpression](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html#DDB-Query-request-KeyConditionExpression)
+* **KeyCondition**: parses a [KeyConditionExpression](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html#DDB-Query-request-KeyConditionExpression)
 * **filter**: parses a [FilterExpression](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/QueryAndScan.html#FilteringResults)
 * **project**: parses a [ProjectionExpression](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.AccessingItemAttributes.html)
 * **index**: forwards value as `IndexName` param
@@ -325,14 +326,14 @@ resultOne:
 resultTwo.ExpressionAttributeValues:
 ```json
 {
-  ":1": { S: "ABC" },
-  ":2": { N: 50 },
-  ":3": { N: 100 },
-  ":4": { S: "big" },
-  ":5": { BOOL: true },
-  ":6": { S: "blue" },
-  ":7": { S: "fast" },
-  ":8": { S: "cheap" },
+  ":1": { "S": "ABC" },
+  ":2": { "N": 50 },
+  ":3": { "N": 100 },
+  ":4": { "S": "big" },
+  ":5": { "BOOL": true },
+  ":6": { "S": "blue" },
+  ":7": { "S": "fast" },
+  ":8": { "S": "cheap" },
 }
 ```
 
@@ -347,15 +348,15 @@ _For readability, `path` => `#path` and `value` => `:value`_
 
 Operator | Example | Result
 --- | --- | ---
-**eq** | `{ path: { $eq: 'value' } } | `'#path => :value'`
-**ne** | `{ path: { $ne: 'value' } } | `'#path <> :value'`
-**gt** | `{ path: { $gt: value } } | `'#path > :value'`
+**eq** | `{ path: { $eq: 'value' } }` | `'#path => :value'`
+**ne** | `{ path: { $ne: 'value' } }` | `'#path <> :value'`
+**gt** | `{ path: { $gt: value } }` | `'#path > :value'`
 **gte** | `{ path: { $gte: 'value' } }` | `'#path >= :value'`
 **lt** | `{ path: { $lt: 'value' } }` | `'#path < :value'`
 **lte** | `{ path: { $lte: 'value' } }` | `'#path <= :value'`
-**between** | `{ path: { $between: ['valueOne', 'valueTwo'] } }` | `'#path BETWEEN :valueOne AND :valueTwo'`
-**in** | `{ path: { $in: ['valueOne', 'valueTwo', ...valueN]} }` | `'#path IN (:valueOne, :valueTwo, ...:valueN)'`
-**nin** | `{ path: { $nin: ['valueOne', 'valueTwo', ...valueN]} }` | `'NOT #path IN (:valueOne, :valueTwo, ...:valueN)'`
+**between** | `{ path: { $between: ['one', 'two'] } }` | `'#path BETWEEN :one AND :two'`
+**in** | `{ path: { $in: ['one', 'two', ...n]} }` | `'#path IN (:one, :two, ...:n)'`
+**nin** | `{ path: { $nin: ['one', 'two', ...n]} }` | `'NOT #path IN (:one, :two, ...:n)'`
 
 ### Functions
 
@@ -375,9 +376,9 @@ Operator | Example | Result
 
 Operator | Example | Result
 --- | --- | ---
-**and** | `{ $and: [{ path: 'valueOne' }, { path: 'valueTwo' }] }` | `'#path = :valueOne AND #path = :valueTwo'`
-**or** | `{ $or: [{ path: 'valueOne' }, { path: 'valueTwo' }] }` | `'#path = :valueOne OR #path = :valueTwo'`
-**nor** | `{ $nor: [{ path: 'valueOne' }, { path: 'valueTwo' }] }` | `'NOT #path = :valueOne OR #path = :valueTwo'`
+**and** | `{ $and: [{ one: 'one' }, { two: 'two' }] }` | `'#one = :one AND #two = :two'`
+**or** | `{ $or: [{ path: 'one' }, { path: 'two' }] }` | `'#path = :one OR #path = :two'`
+**nor** | `{ $nor: [{ path: 'one' }, { path: 'two' }] }` | `'NOT #path = :one OR #path = :two'`
 **not** | `{ $not: { path: { $beginsWith: 'value' } } }` | `'NOT begins_with(#path, :value)'`
 
 ### Update Operators
@@ -389,7 +390,7 @@ Operator | Example | Result
 **prepend** | `{ path: { $prepend: 'value' } }` | `'#path = list_append(:value, #path)'`
 **ine** | `{ path: { $ine: 'value' } }` | `'#path = if_not_exists(#path, :value)'`
 **inc** | `{ path: { $inc: 5 } }` | `'#path = #path + :5'`
- | `{ path: { $inc: -5} }` | `'#path = #path - :5'`
+ | `{ path: { $inc: -5 } }` | `'#path = #path - :5'`
 **remove** | `{ $remove: ['path', 'nested.path'] }` | `'REMOVE #path, #nested.#path'`
 **add** | `{ $add: { path: 'value' } }` | `'ADD #path :value'`
 **delete** | `{ $delete: { path: 'value' } }` | `'DELETE #path :value'`
