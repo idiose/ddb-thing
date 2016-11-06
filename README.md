@@ -39,7 +39,7 @@ const newUser = await users.put({ username: 'username', email: 'email' }, { cond
 
 ### Options
 
-The following can be reassigned (`thing.options[ _option_ ] = _value_ `)
+The following can be reassigned (`thing.options[option]`)
 
 Option | Type | Default | Description
 --- | --- | --- | ---
@@ -67,7 +67,7 @@ Option | Type | Default | Description
 
 #### Errors
 
-Each built-in validation error can be reassigned (`thing.errors[ _error_ ] = _value_ `) to either a `String` or a `Function`.
+Each built-in validation error can be reassigned (`thing.errors[error]`) to either a `String` or a `Function`.
 Functions can, in general, expect arguments:
 
 * **path**: the attribute path (i.e. `'name.first'`, `'age'`)
