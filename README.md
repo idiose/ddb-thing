@@ -369,7 +369,7 @@ Operator | Example | Result
 **type** | `{ path: { $type: 'S' } }` | `'type(#path, :S)'`
 **beginsWith** | `{ path: { $beginsWith: 'value' } }` | `'begins_with(#path, :value)'`
 **contains** | `{ path: { $contains: 'value' } }` | `'contains(#path, :value)'`
-**size** | `{ $size:path: { $gt: $size:otherPath } }` | `'size(#path) > size(#otherPath)'`
+**size** | `{ '$size:path': { $gt: '$size:otherPath' } }` | `'size(#path) > size(#otherPath)'`
 
 
 ### Logical Evaluations
