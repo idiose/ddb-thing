@@ -132,7 +132,7 @@ Custom validators (synchronous or asynchronous) are passed to the `validate` opt
 
 ```js
 const validName = (value) => {
-  if (!/$[A-Za-z0-9]+/.test(value)) throw new Error('Invalid username');
+  if (!/^[A-Za-z0-9]+$/.test(value)) throw new Error('Invalid username');
 };
 
 const validTitle = async (value) => {
