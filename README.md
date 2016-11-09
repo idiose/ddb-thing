@@ -182,9 +182,10 @@ In addition to the specified parameters, actions can also override the following
 
 `response`, `responseHandler`, `defaults`, `required`, `validate`, `setters`, `timestamps`, `getters`, `consistentRead`, `consumedCapacity`, `collectionMetrics`
 
-### .put(*Key*[, { *conditions*, *returnValues* }])
+### .put(*Item*[, { *conditions*, *returnValues* }])
 Writes an item to the table. Delegates to [DynamoDB.putItem](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html)
 
+* **Item** the item!
 * **conditions**: parses a [ConditionExpression](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html)
 * **returnValues**: forwards value as `ReturnValues` param
 
