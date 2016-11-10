@@ -38,7 +38,7 @@ describe('schema', () => {
     expect(() => schema({ attributes: { name: { type: String, required: [] } } })).to.throw(notBool);
   });
   it('throws an error when \'default\' option is given a value that doesn\'t match described type', () => {
-    const wrongType = type => `option 'default' expects a value with type '${type}' (at \'name\')`;
+    const wrongType = type => `option 'default' expects a value with type '${type}' (at 'name')`;
     expect(() => schema({ attributes: { name: { type: String, default: 5 } } }))
       .to.throw(wrongType('String'));
     expect(() => schema({ attributes: { name: { type: Boolean, default: 'true' } } }))
