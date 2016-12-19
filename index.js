@@ -1,3 +1,1 @@
-import thing from './lib/thing';
-
-export default thing;
+module.exports = require('./lib/thing');

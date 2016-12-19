@@ -25,12 +25,15 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha --compilers js:babel-core/register tests/index.js"
+    "test": "mocha --compilers js:babel-core/register tests/index.js",
+    "build": "babel src -d lib",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "aws-sdk": "^2.6.8"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "babel-core": "^6.17.0",
     "babel-polyfill": "^6.16.0",
     "babel-preset-latest": "^6.16.0",

@@ -122,7 +122,7 @@ Attribute Type | Option | Value Type | Description
 `String` | `minlength` | `Number` | Indicates `value.length` must be at least *n*
 `String` | `maxlength` | `Number` | Indicates `value.length` cannot exceed *n*
 `String` | `lowercase` | `Boolean` | Includes a `.toLowerCase()` setter
-`String` | `uppercaes` | `Boolean` | Includes a `.toUpperCase()` setter
+`String` | `uppercase` | `Boolean` | Includes a `.toUpperCase()` setter
 `String` | `trim` | `Boolean` | Includes a `.trim()` setter
 `Number` | `min` | `Number` | Indicates value must be at least *n*
 `Number` | `max` | `Number` | Indicates value cannot exceed *n*
